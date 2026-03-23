@@ -4,6 +4,8 @@ const documentSchema = new mongoose.Schema(
   {
     topic: { type: String, required: true, index: true },
     title: { type: String, required: true },
+    sourceTitle: { type: String, default: '' },
+    chunkIndex: { type: Number, default: 1 },
     content: { type: String, required: true },
     tags: { type: [String], default: [] },
   },

@@ -147,7 +147,7 @@ export default function Onboarding() {
       </main>
 
       <footer className="py-12 border-t border-outline-variant/10 px-8 bg-surface text-center">
-        <p className="text-sm text-on-surface-variant">© 2024 TutorAI. All intellectual assets protected.</p>
+        <p className="text-sm text-on-surface-variant">© 2026 TutorAI. Made with ❤️ by Piyush</p>
       </footer>
     </div>
   );

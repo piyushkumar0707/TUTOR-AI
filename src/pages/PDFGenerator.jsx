@@ -41,9 +41,7 @@ export default function PDFGenerator() {
   useEffect(() => {
     if (!token) return;
 
-    fetch('/api/pdf/history', {
-      headers: { Authorization: `Bearer ${token}` },
-    })
+    fetch('/api/pdf/history', { credentials: 'include' })
       .then(async (res) => {
         if (!res.ok) throw new Error('Failed to load assignment history');
         return res.json();
@@ -64,7 +62,8 @@ export default function PDFGenerator() {
     try {
       const res = await fetch('/api/pdf/generate', {
         method:  'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body:    JSON.stringify({ topic, gradeLevel: grade, assignmentType: type }),
       });
       if (!res.ok) { const d = await res.json(); throw new Error(d.error || 'Failed'); }

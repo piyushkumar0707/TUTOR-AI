@@ -6,29 +6,55 @@ const AuthContext = createContext();
 export function AuthProvider({ children }) {
   const [user,  setUser]  = useState(null);
   const [token, setToken] = useState(null);
+  const [initializing, setInitializing] = useState(true);
 
   useEffect(() => {
-    const t = localStorage.getItem('ai_tutor_token');
-    const u = localStorage.getItem('ai_tutor_user');
-    if (t) { setToken(t); setUser(JSON.parse(u)); }
+    let mounted = true;
+
+    const checkSession = async () => {
+      try {
+        const res = await fetch('/api/auth/me', { credentials: 'include' });
+        if (!res.ok) throw new Error('No active session');
+        const data = await res.json();
+        if (!mounted) return;
+        setUser(data.user || null);
+        setToken(data.user ? 'cookie' : null);
+      } catch {
+        if (!mounted) return;
+        setUser(null);
+        setToken(null);
+      } finally {
+        if (mounted) setInitializing(false);
+      }
+    };
+
+    checkSession();
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
-  const login = (tokenVal, userData) => {
-    localStorage.setItem('ai_tutor_token', tokenVal);
-    localStorage.setItem('ai_tutor_user', JSON.stringify(userData));
-    setToken(tokenVal);
+  const login = (userData) => {
     setUser(userData);
+    setToken('cookie');
   };
 
-  const logout = () => {
-    localStorage.removeItem('ai_tutor_token');
-    localStorage.removeItem('ai_tutor_user');
+  const logout = async () => {
+    try {
+      await fetch('/api/auth/logout', {
+        method: 'POST',
+        credentials: 'include',
+      });
+    } catch {
+      // Keep local state cleanup even if the network call fails.
+    }
     setToken(null);
     setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout }}>
+    <AuthContext.Provider value={{ user, token, initializing, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

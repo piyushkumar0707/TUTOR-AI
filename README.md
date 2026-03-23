@@ -217,6 +217,8 @@ VITE_API_URL=http://localhost:5000
 
 Before running, seed the 10+ knowledge documents into MongoDB:
 
+Do not run the seeder in production. It is intended for local/dev data setup only.
+
 ```bash
 cd server
 node rag/seeder.js

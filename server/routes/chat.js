@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const groq = require('../services/groqClient');
 const retrieve = require('../rag/retriever');
 const ChatHistory = require('../models/ChatHistory');
@@ -64,6 +65,9 @@ router.post('/', authMiddleware, async (req, res) => {
   try {
     let chat = null;
     if (sessionId) {
+      if (!mongoose.Types.ObjectId.isValid(sessionId)) {
+        return res.status(400).json({ error: 'Invalid session ID' });
+      }
       chat = await ChatHistory.findOne({ _id: sessionId, userId });
     }
 
@@ -148,6 +152,10 @@ router.get('/history', authMiddleware, async (req, res) => {
 
 router.get('/history/:id', authMiddleware, async (req, res) => {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ error: 'Invalid session ID' });
+    }
+
     const chat = await ChatHistory.findOne({ _id: req.params.id, userId: req.user.id });
     if (!chat) return res.status(404).json({ error: 'Not found' });
 

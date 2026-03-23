@@ -3,12 +3,30 @@
     "topic": "Coding",
     "title": "JavaScript Fundamentals",
     "tags": ["javascript", "programming", "variables", "functions"],
-    "content": "JavaScript is a dynamic scripting language for the web. Key concepts: variables (let, const, var), data types (string, number, boolean, array, object), functions (regular and arrow functions), promises and async/await for asynchronous code, DOM manipulation, and event listeners."
+    "content": "JavaScript is a general-purpose programming language used heavily in web development. Core fundamentals include variables declared with let and const, primitive data types, objects, arrays, functions, and control flow. Functions can be declared traditionally or as arrow functions, and they support closures, which allow inner functions to access outer scope variables. JavaScript is event-driven in the browser, so user actions such as clicks or input changes trigger handlers. Asynchronous programming is handled with promises and async/await, which make network calls and timers easier to manage without deeply nested callbacks. The language is dynamically typed, so values can change type at runtime, making careful validation important. Understanding scope, hoisting, and object references helps prevent bugs. These fundamentals are essential before moving to frameworks, because modern frontend and backend JavaScript both rely on strong knowledge of language basics."
   },
   {
     "topic": "Coding",
     "title": "Data Structures Overview",
     "tags": ["data structures", "arrays", "linked lists", "trees", "graphs"],
-    "content": "Common data structures: Arrays (ordered list, O(1) access), Linked Lists (dynamic size, O(n) access), Stacks (LIFO), Queues (FIFO), Hash Maps (key-value, O(1) average), Trees (hierarchical, BST for sorted data), Graphs (nodes + edges, used for networks). Choosing the right structure is key to efficient algorithms."
+    "content": "Data structures organize information so operations such as search, insert, and delete can be efficient. Arrays provide fast indexed access but can be expensive for insertions in the middle. Linked lists support easier insertion and deletion when node references are known but have slower random access. Stacks follow last in first out behavior, useful for undo systems and expression evaluation. Queues follow first in first out behavior, common in scheduling and breadth-first traversal. Hash maps store key-value pairs and usually provide near constant-time lookup. Trees represent hierarchical relationships; binary search trees maintain ordered data for fast lookup when balanced. Graphs model networks with nodes and edges and support pathfinding and dependency analysis. Choosing the correct structure affects memory usage and runtime complexity. Strong data structure knowledge leads to cleaner designs and better performance in real software systems."
+  },
+  {
+    "topic": "Coding",
+    "title": "Algorithm Complexity and Big O",
+    "tags": ["big o", "complexity", "algorithms", "performance"],
+    "content": "Big O notation describes how algorithm cost grows as input size increases. Time complexity measures runtime growth, while space complexity measures memory growth. Common time classes include O(1), O(log n), O(n), O(n log n), and O(n^2). For example, binary search is O(log n) on sorted data, while linear search is O(n). Nested loops often lead to O(n^2), which can become slow for large inputs. Complexity analysis focuses on dominant terms and ignores constants in asymptotic notation. Best, average, and worst-case behavior can differ, so understanding context matters when comparing algorithms. Practical optimization often starts by selecting better algorithms before micro-optimizing code. Big O does not capture every real-world factor, but it is a useful model for scalability and architecture decisions. Engineers use complexity analysis to predict bottlenecks and choose data structures that keep systems responsive as data volume grows."
+  },
+  {
+    "topic": "Coding",
+    "title": "Object-Oriented Programming Principles",
+    "tags": ["oop", "encapsulation", "inheritance", "polymorphism", "abstraction"],
+    "content": "Object-oriented programming organizes code around objects that bundle data and behavior. Core principles include encapsulation, abstraction, inheritance, and polymorphism. Encapsulation means internal state is controlled through defined methods, reducing accidental misuse. Abstraction hides implementation details behind clear interfaces so users of a class focus on what it does, not how. Inheritance allows a class to reuse behavior from a parent class, while polymorphism lets different classes provide their own implementation of a shared method contract. Good OOP design emphasizes composition over deep inheritance chains, because composition is often easier to maintain and test. OOP is widely used in UI systems, backend services, and domain modeling where entities have clear responsibilities. Applying these principles carefully helps keep code modular, readable, and adaptable as requirements evolve."
+  },
+  {
+    "topic": "Coding",
+    "title": "HTTP APIs and REST Basics",
+    "tags": ["http", "api", "rest", "json", "status codes"],
+    "content": "HTTP APIs allow software systems to communicate over the web using requests and responses. REST is a design style where resources are identified by URLs and manipulated with standard methods such as GET, POST, PUT, PATCH, and DELETE. A typical API sends JSON payloads and uses status codes to indicate outcomes: 200 for success, 201 for created, 400 for bad request, 401 for unauthorized, 404 for not found, and 500 for server errors. Good API design includes consistent naming, validation, clear error messages, and predictable response shapes. Statelessness is a key REST principle, meaning each request includes all required context. Authentication is commonly handled with cookies or bearer tokens depending on architecture. API versioning and documentation become important as systems grow. Understanding HTTP and REST fundamentals is essential for building reliable frontend-backend integrations and maintainable distributed services."
   }
 ]

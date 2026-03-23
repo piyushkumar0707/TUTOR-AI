@@ -156,9 +156,7 @@ export default function Chat() {
     if (!sessionFromQuery) return;
 
     setLoading(true);
-    fetch(`/api/chat/history/${sessionFromQuery}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
+    fetch(`/api/chat/history/${sessionFromQuery}`, { credentials: 'include' })
       .then(async (res) => {
         if (!res.ok) throw new Error('Failed to load chat session');
         return res.json();
@@ -196,7 +194,8 @@ export default function Chat() {
     try {
       const res  = await fetch('/api/chat', {
         method:  'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body:    JSON.stringify({ message: userMsg.content, topic, sessionId }),
       });
       const data = await res.json();

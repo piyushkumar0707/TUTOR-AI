@@ -6,6 +6,7 @@ const NAV_ITEMS = [
   { path: '/chat', icon: 'chat',           label: 'AI Chat' },
   { path: '/quiz', icon: 'quiz',           label: 'Quiz' },
   { path: '/pdf',  icon: 'picture_as_pdf', label: 'PDF Generator' },
+  { path: '/profile', icon: 'account_circle', label: 'Profile' },
 ];
 
 function formatRelativeTime(dateInput) {
@@ -33,15 +34,16 @@ export default function Sidebar() {
       return;
     }
 
-    fetch('/api/chat/history', {
-      headers: { Authorization: `Bearer ${token}` },
-    })
+    fetch('/api/chat/history', { credentials: 'include' })
       .then(r => (r.ok ? r.json() : []))
       .then(data => setRecentChats(Array.isArray(data) ? data.slice(0, 3) : []))
       .catch(() => setRecentChats([]));
   }, [token]);
 
-  const handleLogout = () => { logout(); navigate('/'); };
+  const handleLogout = async () => {
+    await logout();
+    navigate('/');
+  };
 
   const initials = user?.name
     ? user.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)

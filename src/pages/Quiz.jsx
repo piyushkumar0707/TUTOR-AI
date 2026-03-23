@@ -4,7 +4,6 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkBreaks from 'remark-breaks';
 import Sidebar from '../components/Sidebar';
-import { useAuth } from '../context/AuthContext';
 
 const SUGGESTED = ['Quantum Physics', 'Ancient Rome', 'Organic Chemistry', 'Linear Algebra', 'DNA & Genetics'];
 
@@ -105,7 +104,7 @@ function TopicInput({ onGenerate, loading, error, validationError, setValidation
 }
 
 /* ── Active Question Screen ── */
-function ActiveQuestion({ question, options, topic, current, total, onAnswer, token }) {
+function ActiveQuestion({ question, options, topic, current, total, onAnswer }) {
   const [selected, setSelected] = useState(null);
   const [explanation, setExplanation] = useState(null);
   const [loadingExplanation, setLoadingExplanation] = useState(false);
@@ -125,7 +124,8 @@ function ActiveQuestion({ question, options, topic, current, total, onAnswer, to
     try {
       const res = await fetch('/api/quiz/explain', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({
           question: question.question,
           userAnswer: selected,
@@ -344,7 +344,6 @@ function ScoreScreen({ score, total, topic, answers, onRetry, onNew }) {
 
 /* ── Main Quiz Page ── */
 export default function Quiz() {
-  const { token } = useAuth();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const initialTopic = searchParams.get('topic') || '';
@@ -359,12 +358,13 @@ export default function Quiz() {
   const [loading,   setLoading]   = useState(initialTopic ? true : false);
   const [error,     setError]     = useState('');
   const [validationError, setValidationError] = useState('');
+  const [saveError, setSaveError] = useState('');
 
   useEffect(() => {
     if (initialTopic && phase === 'quiz-loading') {
       generateQuiz(initialTopic, sessionId);
     }
-  }, []);
+  }, [initialTopic, sessionId, phase]);
 
   const generateQuiz = async (topicVal, sid = '') => {
     const trimmedTopic = typeof topicVal === 'string' ? topicVal.trim() : '';
@@ -380,13 +380,15 @@ export default function Quiz() {
     }
 
     setValidationError('');
+    setSaveError('');
     setLoading(true);
     setError('');
     setTopic(trimmedTopic);
     try {
       const res  = await fetch('/api/quiz/generate', {
         method:  'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body:    JSON.stringify({ topic: trimmedTopic, sessionId: sid }),
       });
       const data = await res.json();
@@ -417,9 +419,12 @@ export default function Quiz() {
       // Save result
       fetch('/api/quiz/save', {
         method:  'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body:    JSON.stringify({ topic, score: newScore, questions: newAnswers }),
-      }).catch(() => {});
+      }).catch(() => {
+        setSaveError("Your result couldn't be saved.");
+      });
     } else {
       setScore(newScore);
       setAnswers(newAnswers);
@@ -458,16 +463,22 @@ export default function Quiz() {
           current={current + 1}
           total={questions.length}
           onAnswer={handleAnswer}
-          token={token}
         />
       )}
       {phase === 'score' && (
-        <ScoreScreen
-          score={score} total={questions.length}
-          topic={topic} answers={answers}
-          onRetry={() => generateQuiz(topic)}
-          onNew={() => setPhase('input')}
-        />
+        <>
+          <ScoreScreen
+            score={score} total={questions.length}
+            topic={topic} answers={answers}
+            onRetry={() => generateQuiz(topic)}
+            onNew={() => setPhase('input')}
+          />
+          {saveError && (
+            <div className="fixed bottom-6 right-6 z-[80] rounded-lg border border-error/30 bg-error-container/20 px-4 py-3 text-sm text-error shadow-lg">
+              {saveError}
+            </div>
+          )}
+        </>
       )}
     </div>
   );

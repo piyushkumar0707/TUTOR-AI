@@ -3,18 +3,36 @@
     "topic": "Science",
     "title": "Photosynthesis",
     "tags": ["biology", "plants", "photosynthesis", "chlorophyll"],
-    "content": "Photosynthesis is the process by which green plants convert sunlight into food. The equation is: 6CO2 + 6H2O + light energy -> C6H12O6 + 6O2. It occurs in chloroplasts using chlorophyll. The light-dependent reaction produces ATP and NADPH. The Calvin cycle (light-independent) uses these to produce glucose."
+    "content": "Photosynthesis is the process plants use to convert light energy into chemical energy stored in glucose. It mainly occurs in leaf cells inside chloroplasts, where chlorophyll pigments absorb light, especially red and blue wavelengths. The overall reaction is 6CO2 + 6H2O + light -> C6H12O6 + 6O2. In the light-dependent stage, energy from sunlight drives electron flow through photosystems, producing ATP and NADPH and releasing oxygen from water. In the Calvin cycle, carbon dioxide is fixed and reduced using ATP and NADPH to build sugars. Photosynthesis is essential because it forms the base of most food chains and helps regulate atmospheric carbon dioxide and oxygen. Environmental factors such as light intensity, carbon dioxide concentration, water availability, and temperature influence its rate. Understanding photosynthesis is central to ecology, agriculture, and climate science."
   },
   {
     "topic": "Science",
     "title": "Newton's Laws of Motion",
     "tags": ["physics", "newton", "force", "motion"],
-    "content": "Newton's First Law: An object stays at rest or in motion unless acted on by a force (inertia). Second Law: Force = Mass x Acceleration (F = ma). Third Law: For every action there is an equal and opposite reaction. These laws form the foundation of classical mechanics."
+    "content": "Newton's three laws explain how forces affect motion. First law: an object remains at rest or in uniform motion unless acted on by a net external force, which describes inertia. Second law: acceleration depends on net force and mass, written as F = ma. This means stronger forces produce greater acceleration, while larger mass resists acceleration. Third law: every action force has an equal and opposite reaction force acting on another object. These laws apply to many everyday situations, from seatbelt safety to sports and vehicle motion. Free-body diagrams help identify all forces acting on an object, including gravity, normal force, tension, and friction. By combining vector directions with Newton's laws, you can solve for unknown acceleration or force in one or more dimensions. Newtonian mechanics is the foundation for engineering design, structural analysis, and basic robotics."
   },
   {
     "topic": "Science",
     "title": "Periodic Table and Atomic Structure",
     "tags": ["chemistry", "atoms", "periodic table", "elements"],
-    "content": "Atoms consist of protons, neutrons (in the nucleus), and electrons (orbiting shells). Atomic number = number of protons. Elements are arranged in the periodic table by atomic number. Groups (columns) share chemical properties. Periods (rows) share the same number of electron shells."
+    "content": "Atoms are made of protons and neutrons in the nucleus, with electrons in surrounding energy levels. The atomic number equals the number of protons and identifies the element. Isotopes are atoms of the same element with different neutron counts. The periodic table is arranged by increasing atomic number and grouped by recurring chemical behavior. Elements in the same column, called groups, have similar valence electron patterns and often similar reactivity. Rows, called periods, indicate the highest occupied energy level. Metals tend to lose electrons, nonmetals tend to gain or share electrons, and metalloids show mixed behavior. Electron configuration explains trends such as atomic radius, ionization energy, and electronegativity. These periodic trends help predict how elements react and what compounds they form. Atomic structure and periodic relationships are fundamental to understanding bonding, reactions, and material properties in chemistry and biochemistry."
+  },
+  {
+    "topic": "Science",
+    "title": "Cell Structure and Function",
+    "tags": ["cell", "organelles", "biology", "nucleus"],
+    "content": "Cells are the basic units of life. In eukaryotic cells, the nucleus stores DNA and controls gene expression. The cell membrane is a selective barrier that regulates movement of substances in and out of the cell. Cytoplasm contains organelles, each with specialized roles. Mitochondria generate ATP through cellular respiration, while ribosomes synthesize proteins. The endoplasmic reticulum and Golgi apparatus modify and transport proteins and lipids. Lysosomes help break down waste, and vacuoles store materials. Plant cells contain chloroplasts for photosynthesis and a rigid cell wall for structure. Cell function depends on coordinated organelle activity and communication signals. Homeostasis is maintained through membrane transport, signaling pathways, and energy management. Understanding cell structure explains growth, repair, disease mechanisms, and how medicines target specific cellular processes."
+  },
+  {
+    "topic": "Science",
+    "title": "Chemical Bonding",
+    "tags": ["chemical bonding", "ionic", "covalent", "metallic"],
+    "content": "Chemical bonding describes how atoms combine to form stable substances. Ionic bonds form when electrons transfer from one atom to another, creating oppositely charged ions that attract each other, as in sodium chloride. Covalent bonds form when atoms share electron pairs, common in molecules such as water and carbon dioxide. Polar covalent bonds arise when electrons are shared unequally, producing partial charges. Metallic bonding involves a lattice of positive ions surrounded by delocalized electrons, which explains conductivity and malleability in metals. Bond type influences melting point, electrical behavior, and solubility. Electronegativity differences help predict bond character, while valence electrons guide Lewis structures and molecular geometry. Intermolecular forces, including hydrogen bonds and van der Waals forces, also affect physical properties. Bonding concepts are essential for understanding reactions, biological molecules, and material design."
+  },
+  {
+    "topic": "Science",
+    "title": "Energy Transfer in Ecosystems",
+    "tags": ["ecosystem", "food chain", "energy", "trophic levels"],
+    "content": "Energy flow in ecosystems begins with producers such as plants and algae, which convert sunlight into chemical energy through photosynthesis. Primary consumers eat producers, secondary consumers eat herbivores, and higher-level predators continue the chain. At each trophic level, most energy is lost as heat due to metabolism, so only a small portion is transferred upward. This is why energy pyramids narrow sharply toward top predators. Decomposers such as fungi and bacteria recycle nutrients by breaking down dead organisms and waste, returning materials to soil and water. Food webs, which connect many food chains, better represent real ecosystems than single chains. Changes at one level can create cascading effects across the web. Understanding ecosystem energy transfer supports conservation planning, sustainable agriculture, and predictions about how climate change may alter species relationships and biodiversity."
   }
 ]

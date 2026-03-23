@@ -3,18 +3,36 @@
     "topic": "Mathematics",
     "title": "Algebra Basics",
     "tags": ["algebra", "equations", "variables"],
-    "content": "Algebra is a branch of mathematics dealing with symbols and rules for manipulating those symbols. Variables like x and y represent unknown values. Linear equations (ax + b = 0) have one solution. Quadratic equations (ax^2 + bx + c = 0) are solved using the quadratic formula: x = (-b +- sqrt(b^2-4ac)) / 2a."
+    "content": "Algebra is the language of patterns and unknowns. Instead of writing a specific number, you use a variable such as x, y, or n to represent any value that fits a rule. A basic goal in algebra is solving equations, which means isolating the variable while doing the same operation on both sides. In a linear equation like 3x + 5 = 20, subtract 5 from both sides and then divide by 3 to get x = 5. Quadratic equations involve x^2 and may have two, one, or no real solutions. You can solve many quadratics by factoring, completing the square, or using the quadratic formula. Expressions, equations, and inequalities all depend on algebraic properties such as distributive, associative, and commutative rules. Strong algebra skills are important because they support geometry, calculus, statistics, and many real-world tasks such as budgeting, modeling growth, and interpreting formulas in science."
   },
   {
     "topic": "Mathematics",
     "title": "Geometry Fundamentals",
     "tags": ["geometry", "shapes", "area", "volume"],
-    "content": "Geometry studies shapes, sizes, and properties of figures. Key formulas: Area of circle = pi r^2. Area of triangle = (base x height) / 2. Pythagorean theorem: a^2 + b^2 = c^2 for right triangles. Volume of a sphere = (4/3)pi r^3. Volume of a cylinder = pi r^2 h."
+    "content": "Geometry studies points, lines, angles, and shapes, and it helps you reason about space. Plane geometry focuses on flat figures such as triangles, rectangles, circles, and polygons. Solid geometry extends to three-dimensional figures such as prisms, cylinders, cones, and spheres. Important ideas include perimeter, area, surface area, and volume. For example, the area of a triangle is (base x height) / 2, while the area of a circle is pi r^2. The Pythagorean theorem, a^2 + b^2 = c^2, applies to right triangles and is widely used in coordinate geometry and construction. Angle relationships, congruence, and similarity help compare figures and prove results logically. Coordinate geometry combines algebra with geometry by placing shapes on a graph and using equations to describe them. Geometry is practical in architecture, design, engineering, and navigation because it provides tools for measuring distance, optimizing space, and understanding spatial relationships with precision."
   },
   {
     "topic": "Mathematics",
     "title": "Calculus Introduction",
     "tags": ["calculus", "derivatives", "integrals", "limits"],
-    "content": "Calculus is the study of continuous change. Derivatives measure the rate of change: d/dx(x^n) = nx^(n-1). Integrals measure accumulated change. The Fundamental Theorem of Calculus links differentiation and integration. Limits describe the value a function approaches as input approaches a point."
+    "content": "Calculus studies change and accumulation. It has two major branches: differential calculus and integral calculus. Differential calculus focuses on derivatives, which measure how fast a quantity changes at an instant. For example, if position changes over time, the derivative gives velocity. Integral calculus measures accumulation, such as total distance traveled from a velocity function or total area under a curve. Limits are the foundation of both ideas because they describe what a function approaches near a point, even if the exact point is difficult to evaluate directly. A key rule is d/dx(x^n) = n x^(n-1), but many derivative rules combine through product, quotient, and chain rules. The Fundamental Theorem of Calculus links derivatives and integrals, showing they are inverse processes. Calculus is essential in physics, economics, biology, and machine learning because many real systems involve changing values over time."
+  },
+  {
+    "topic": "Mathematics",
+    "title": "Linear Functions and Slope",
+    "tags": ["linear functions", "slope", "graphing", "y-intercept"],
+    "content": "A linear function models a constant rate of change and can be written as y = mx + b. In this form, m is the slope and b is the y-intercept. The slope tells how much y changes when x increases by one unit. A positive slope means the line rises left to right, while a negative slope means it falls. A slope of zero gives a horizontal line, and an undefined slope gives a vertical line. You can compute slope between two points using m = (y2 - y1) / (x2 - x1). Once you know the slope and one point, you can build the equation of the line with point-slope form: y - y1 = m(x - x1). Linear models are used for cost comparisons, speed, and trend analysis because they are simple and interpretable. Understanding slope and intercept helps you quickly read graphs and predict outcomes from data."
+  },
+  {
+    "topic": "Mathematics",
+    "title": "Probability Basics",
+    "tags": ["probability", "outcomes", "events", "statistics"],
+    "content": "Probability measures how likely an event is to occur, using values from 0 to 1. A probability of 0 means impossible, and 1 means certain. For equally likely outcomes, probability is calculated as favorable outcomes divided by total outcomes. If a fair die is rolled, the chance of getting a 4 is 1/6. Events can be independent or dependent. Independent events do not affect each other, so probabilities multiply: P(A and B) = P(A) x P(B). Dependent events change based on previous outcomes, such as drawing cards without replacement. The probability of at least one event can often be found using complements: P(at least one) = 1 - P(none). Expected value combines possible outcomes with their probabilities to estimate long-term averages. Probability is fundamental for statistics, risk analysis, forecasting, and decision-making in fields from medicine to finance."
+  },
+  {
+    "topic": "Mathematics",
+    "title": "Trigonometric Ratios",
+    "tags": ["trigonometry", "sine", "cosine", "tangent", "right triangle"],
+    "content": "Trigonometry studies relationships between angles and side lengths in triangles, especially right triangles. The three basic trigonometric ratios are sine, cosine, and tangent. For an angle theta, sin(theta) = opposite/hypotenuse, cos(theta) = adjacent/hypotenuse, and tan(theta) = opposite/adjacent. These ratios let you solve missing sides or angles when partial information is known. Inverse trigonometric functions help recover an angle from a ratio, such as theta = sin^-1(value). The Pythagorean identity, sin^2(theta) + cos^2(theta) = 1, connects the ratios and is used in simplification and proofs. Trigonometry also applies to periodic behavior through the unit circle, where sine and cosine represent coordinates on a rotating point. Practical uses include wave modeling, navigation, architecture, and physics problems involving forces and motion."
   }
 ]

@@ -3,12 +3,30 @@
     "topic": "History",
     "title": "World War II Overview",
     "tags": ["world war 2", "WWII", "1939", "1945", "allies"],
-    "content": "World War II (1939-1945) was a global conflict between the Allies (USA, UK, USSR, France) and the Axis powers (Germany, Italy, Japan). It began with Germany's invasion of Poland. Key events include the Holocaust, Battle of Britain, Pearl Harbor (1941), D-Day (1944), and atomic bombings of Hiroshima and Nagasaki (1945). It ended with Axis surrender."
+    "content": "World War II (1939-1945) was a global conflict involving multiple continents and nearly every major power. The war began in Europe when Germany invaded Poland, prompting Britain and France to declare war. The Axis powers were led by Germany, Italy, and Japan, while the Allies included Britain, the Soviet Union, the United States, China, and others. Important turning points included the Battle of Britain, the German defeat at Stalingrad, the Pacific battles after Pearl Harbor, and the Allied landings in Normandy on D-Day. The war also included the Holocaust, the systematic persecution and murder of six million Jews and millions of other victims. In 1945, Nazi Germany surrendered in May, and Japan surrendered in September after atomic bombings and Soviet entry into the Pacific war. WWII reshaped global politics, accelerated decolonization, and led to the creation of the United Nations."
   },
   {
     "topic": "History",
     "title": "The French Revolution",
     "tags": ["french revolution", "1789", "france", "monarchy"],
-    "content": "The French Revolution (1789-1799) overthrew the French monarchy and established democratic ideals of liberty, equality, and fraternity. Key causes: financial crisis, Enlightenment ideas, social inequality. Events: storming of the Bastille, Declaration of the Rights of Man, Reign of Terror, rise of Napoleon Bonaparte."
+    "content": "The French Revolution (1789-1799) transformed France from an absolute monarchy into a republic and spread new political ideas across Europe. Major causes included state debt, unfair taxation, food shortages, and social inequality among the three estates. Enlightenment thinkers challenged inherited privilege and promoted rights, representation, and popular sovereignty. The revolution began with the Estates-General crisis and the formation of the National Assembly. Symbolic events such as the storming of the Bastille and the Declaration of the Rights of Man and of the Citizen signaled a new political era. However, conflict intensified, leading to the Reign of Terror under the Committee of Public Safety. Eventually, instability and war created conditions for Napoleon Bonaparte's rise. The revolution's legacy includes modern citizenship, secular legal reforms, and the enduring ideals of liberty, equality, and fraternity."
+  },
+  {
+    "topic": "History",
+    "title": "Industrial Revolution",
+    "tags": ["industrial revolution", "factories", "urbanization", "steam engine"],
+    "content": "The Industrial Revolution began in Britain in the late eighteenth century and spread through Europe and North America during the nineteenth century. It marked a shift from hand production to machine-based factory production. Innovations such as the steam engine, mechanized textile equipment, and improved iron production dramatically increased output. Railways and steamships reduced transport time and connected markets, accelerating trade. The revolution also caused major social changes: rapid urbanization, growth of wage labor, and the emergence of industrial middle and working classes. While productivity and national wealth expanded, factory conditions were often unsafe and labor hours were long, including child labor. These hardships encouraged labor unions and social reform movements. Governments gradually introduced regulations on working hours, safety, and education. The Industrial Revolution changed global power structures, strengthened capitalism, and laid the technological foundation for modern industry and economic growth."
+  },
+  {
+    "topic": "History",
+    "title": "Causes of World War I",
+    "tags": ["world war 1", "alliances", "militarism", "nationalism", "imperialism"],
+    "content": "World War I began in 1914 after the assassination of Archduke Franz Ferdinand, but deeper structural causes had built tension for years. Historians often summarize these causes with militarism, alliances, imperial rivalry, and nationalism. Militarism increased competition as countries expanded armies and navies, especially Germany and Britain. Alliance systems divided Europe into rival blocs, meaning a local conflict could trigger wider war commitments. Imperial competition created hostility as powers fought for colonies and influence. Nationalism intensified ethnic and political rivalries, particularly in the Balkans, where declining empires and rising movements clashed. After the Sarajevo assassination, diplomatic failures and mobilization timetables escalated the crisis rapidly into general war. The conflict introduced trench warfare and industrial-scale destruction, eventually reshaping borders and political regimes. Understanding these causes shows how interconnected rivalries and rigid alliances can turn a regional dispute into a global catastrophe."
+  },
+  {
+    "topic": "History",
+    "title": "Decolonization After 1945",
+    "tags": ["decolonization", "independence", "cold war", "postwar"],
+    "content": "Decolonization after 1945 was the process by which colonies in Asia, Africa, and the Middle East gained independence from European empires. World War II weakened colonial powers economically and militarily, while anti-colonial movements gained momentum through mass politics and armed struggle. Leaders such as Jawaharlal Nehru, Kwame Nkrumah, and Ho Chi Minh symbolized different paths to independence. International pressure also grew: the United Nations promoted self-determination, and both the United States and Soviet Union criticized old empires, though often for strategic reasons. Some transitions were negotiated, while others involved prolonged conflict, partition, or civil war. Decolonization created new nation-states but also left difficult legacies, including border disputes, uneven development, and institutions shaped by colonial rule. Despite these challenges, the period transformed global politics by ending formal empire and increasing the political voice of newly independent countries in world affairs."
   }
 ]

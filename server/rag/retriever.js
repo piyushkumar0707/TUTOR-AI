@@ -1,5 +1,9 @@
 const Document = require('../models/Document');
 
+function escapeRegex(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 async function retrieve(query) {
   if (!query || query.trim().length === 0) return '';
 
@@ -16,7 +20,8 @@ async function retrieve(query) {
     const keywords = extractKeywords(query);
     if (keywords.length === 0) return '';
 
-    const regex = new RegExp(keywords.join('|'), 'i');
+    const safePattern = keywords.map(escapeRegex).join('|');
+    const regex = new RegExp(safePattern, 'i');
     const fallback = await Document.find({
       $or: [
         { content: regex },
@@ -34,7 +39,11 @@ async function retrieve(query) {
 
 function formatContext(docs) {
   return docs
-    .map((doc) => `[${doc.topic} - ${doc.title}]\n${doc.content}`)
+    .map((doc) => {
+      const sourceTitle = doc.sourceTitle || doc.title;
+      const chunkLabel = doc.chunkIndex ? ` (chunk ${doc.chunkIndex})` : '';
+      return `[${doc.topic} - ${sourceTitle}${chunkLabel}]\n${doc.content}`;
+    })
     .join('\n\n---\n\n');
 }
 

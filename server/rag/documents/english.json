@@ -3,12 +3,30 @@
     "topic": "English",
     "title": "Essay Writing Structure",
     "tags": ["essay", "writing", "paragraph", "thesis"],
-    "content": "A strong essay has three parts: Introduction (hook, background, thesis statement), Body Paragraphs (topic sentence, evidence, analysis, transition), and Conclusion (restate thesis, summarize key points, closing thought). Each body paragraph should cover one main idea supported by evidence."
+    "content": "A strong essay has a clear structure that guides the reader from claim to conclusion. The introduction should provide context, engage attention with a relevant opening, and end with a precise thesis statement. Body paragraphs should follow a logical sequence, each focused on one controlling idea. A useful pattern is topic sentence, evidence, explanation, and transition. Evidence can include examples, quotations, data, or references, but it should always be interpreted, not simply inserted. Cohesion improves when you use linking phrases and consistent point of view. The conclusion should not introduce new major arguments; instead, it should synthesize key points and reinforce the thesis in a broader context. Effective essays balance clarity, coherence, and depth. Planning with an outline before drafting helps maintain focus and avoid repetition. Revision should check argument quality, paragraph flow, and sentence-level precision."
   },
   {
     "topic": "English",
     "title": "Grammar Essentials",
     "tags": ["grammar", "nouns", "verbs", "tenses", "punctuation"],
-    "content": "Parts of speech: Noun (person, place, thing), Verb (action or state), Adjective (modifies noun), Adverb (modifies verb/adjective), Pronoun (replaces noun), Preposition (shows relationship). Tenses: Simple (I eat), Continuous (I am eating), Perfect (I have eaten). Punctuation: comma, semicolon, colon, apostrophe."
+    "content": "Grammar provides the rules that make writing clear and understandable. Core parts of speech include nouns, verbs, adjectives, adverbs, pronouns, prepositions, conjunctions, and interjections. Correct subject-verb agreement is essential, especially in complex sentences where the subject may be separated from the verb by clauses. Tense consistency also matters: if a paragraph begins in past tense, shifts to present tense should be intentional. Punctuation controls meaning and rhythm. Commas separate ideas and prevent confusion, while semicolons connect closely related independent clauses. Apostrophes mark possession and contractions, and colons introduce explanations or lists. Sentence variety improves readability, but fragments and run-ons should be avoided unless used deliberately for style. Grammar accuracy does not limit creativity; it supports it by ensuring readers can follow your ideas with minimal friction. Careful proofreading for agreement, tense, and punctuation often produces immediate quality improvements."
+  },
+  {
+    "topic": "English",
+    "title": "Close Reading Strategies",
+    "tags": ["close reading", "analysis", "annotation", "inference"],
+    "content": "Close reading is a method of analyzing a text carefully to understand not just what it says, but how it creates meaning. The process begins with active annotation: underline key claims, circle repeated words, and note shifts in tone or perspective. During a second pass, examine structure, diction, and imagery. Ask how sentence patterns, figurative language, and rhetorical choices support the author's purpose. Inference is central to close reading; readers combine textual evidence with reasoning to draw conclusions that are not directly stated. Strong analysis always points to specific language from the text and explains why it matters. Context can be helpful, but close reading prioritizes what is present on the page. This strategy improves comprehension, argument writing, and literary interpretation because it trains readers to justify claims with precise evidence rather than vague summary."
+  },
+  {
+    "topic": "English",
+    "title": "Argumentative Writing and Evidence",
+    "tags": ["argument", "evidence", "counterargument", "persuasion"],
+    "content": "Argumentative writing aims to convince readers through reasoned claims and credible evidence. A strong argument begins with a clear thesis that is specific and debatable. Each paragraph should present one supporting reason, followed by evidence such as examples, quotations, statistics, or expert opinions. Explanation is essential: writers must connect evidence back to the claim and show why it is relevant. Effective arguments also acknowledge counterarguments and respond to them fairly. This demonstrates critical thinking and strengthens credibility. Logical organization matters, often moving from strongest points to nuanced discussion, then ending with a concise synthesis. Tone should remain respectful and analytical rather than emotional or dismissive. Persuasion works best when claims are precise, evidence is reliable, and reasoning is transparent. Argumentative writing is widely used in academic, legal, civic, and professional contexts where decisions depend on justified interpretation."
+  },
+  {
+    "topic": "English",
+    "title": "Literary Devices and Their Effects",
+    "tags": ["literary devices", "metaphor", "imagery", "symbolism", "tone"],
+    "content": "Literary devices are techniques authors use to deepen meaning, shape tone, and influence reader response. Metaphor and simile compare ideas to create vivid understanding, while imagery appeals to senses and builds atmosphere. Symbolism assigns broader meaning to objects, places, or actions beyond their literal role. Personification gives human traits to nonhuman elements, often making abstract ideas more relatable. Irony creates contrast between expectation and reality, which can highlight conflict or criticism. Repetition emphasizes important themes and patterns, while allusion links a text to historical, cultural, or literary references. When analyzing literary devices, identify the technique, cite the relevant line, and explain its effect on interpretation. Strong literary analysis focuses on function, not just identification. Devices are most meaningful when connected to character development, theme, and the writer's overall purpose."
   }
 ]

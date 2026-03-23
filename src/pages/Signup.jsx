@@ -2,15 +2,6 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
-const GoogleIcon = () => (
-  <svg className="w-5 h-5" viewBox="0 0 24 24">
-    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.66l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-  </svg>
-);
-
 export default function Signup() {
   const [form,         setForm]         = useState({ name: '', email: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
@@ -19,21 +10,28 @@ export default function Signup() {
   const { login } = useAuth();
   const navigate  = useNavigate();
 
-  const handleChange = (e) => setForm({ ...form, [e.target.id]: e.target.value });
+  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+
+    if (form.password.length < 8) {
+      setError('Password must be at least 8 characters long.');
+      return;
+    }
+
     setLoading(true);
     try {
       const res  = await fetch('/api/auth/register', {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body:    JSON.stringify(form),
       });
       const data = await res.json();
       if (!res.ok) return setError(data.error || 'Registration failed');
-      login(data.token, data.user);
+      login(data.user);
       navigate('/chat');
     } catch {
       setError('Something went wrong. Please try again.');
@@ -125,16 +123,16 @@ export default function Signup() {
 
           <form className="space-y-4" onSubmit={handleSubmit}>
             {[
-              { id: 'name',     label: 'Full name',  type: 'text',     placeholder: 'Alex Sterling' },
-              { id: 'email',    label: 'Email',       type: 'email',    placeholder: 'alex@example.com' },
-            ].map(({ id, label, type, placeholder }) => (
-              <div key={id} className="space-y-1.5">
-                <label htmlFor={id} className="text-[0.6875rem] uppercase tracking-[0.1em] font-bold text-on-surface-variant px-1">
+              { name: 'name',  label: 'Full name', type: 'text',  placeholder: 'Alex Sterling' },
+              { name: 'email', label: 'Email',     type: 'email', placeholder: 'alex@example.com' },
+            ].map(({ name, label, type, placeholder }) => (
+              <div key={name} className="space-y-1.5">
+                <label htmlFor={name} className="text-[0.6875rem] uppercase tracking-[0.1em] font-bold text-on-surface-variant px-1">
                   {label}
                 </label>
                 <input
-                  id={id} type={type} placeholder={placeholder} required
-                  value={form[id]} onChange={handleChange}
+                  id={name} name={name} type={type} placeholder={placeholder} required
+                  value={form[name]} onChange={handleChange}
                   className="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3.5 text-on-surface placeholder:text-outline/50 focus:ring-2 focus:ring-primary/40 transition-all outline-none"
                 />
               </div>
@@ -145,7 +143,7 @@ export default function Signup() {
               <label htmlFor="password" className="text-[0.6875rem] uppercase tracking-[0.1em] font-bold text-on-surface-variant px-1">Password</label>
               <div className="relative">
                 <input
-                  id="password" type={showPassword ? 'text' : 'password'} placeholder="••••••••" required
+                  id="password" name="password" type={showPassword ? 'text' : 'password'} placeholder="••••••••" required
                   value={form.password} onChange={handleChange}
                   className="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3.5 text-on-surface placeholder:text-outline/50 focus:ring-2 focus:ring-primary/40 transition-all outline-none pr-12"
                 />
@@ -161,20 +159,6 @@ export default function Signup() {
               {loading ? 'Creating account...' : 'Create account'}
             </button>
           </form>
-
-          <div className="relative my-10">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-outline-variant/20"/>
-            </div>
-            <div className="relative flex justify-center text-[0.6875rem] uppercase tracking-[0.1em]">
-              <span className="bg-surface px-4 text-on-surface-variant font-bold">or continue with</span>
-            </div>
-          </div>
-
-          <button className="w-full bg-transparent border border-outline-variant/30 hover:bg-surface-container-low py-3.5 rounded-xl flex items-center justify-center gap-3 transition-all group">
-            <GoogleIcon />
-            <span className="text-on-surface font-semibold group-hover:text-primary transition-colors">Google</span>
-          </button>
 
           <footer className="mt-12 text-center">
             <p className="text-[0.6875rem] text-on-surface-variant leading-relaxed max-w-[280px] mx-auto">

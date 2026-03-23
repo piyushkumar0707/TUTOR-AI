@@ -98,6 +98,78 @@ router.post('/save', authMiddleware, async (req, res) => {
   }
 });
 
+router.post('/explain', authMiddleware, async (req, res) => {
+  const { question, userAnswer, correctAnswer, topic } = req.body;
+
+  if (!question || !correctAnswer) {
+    return res.status(400).json({ error: 'Question and correct answer are required' });
+  }
+
+  try {
+    const ragContext = await retrieve(question);
+    const isCorrect = userAnswer === correctAnswer;
+
+    const prompt = `You are a tutoring assistant. Explain the following quiz question and its answer.
+
+Topic: ${topic}
+Question: ${question}
+Correct Answer: ${correctAnswer}
+${userAnswer ? `User's Answer: ${userAnswer}` : ''}
+
+${isCorrect ? 'The user answered CORRECTLY.' : 'The user answered INCORRECTLY.'}
+
+Provide an explanation in this EXACT format:
+
+**Direct Answer** (2-3 lines confirming the correct answer)
+
+**Key Points**
+* Bullet 1
+* Bullet 2
+* Bullet 3
+
+**Example** (one concrete example related to this concept)
+
+**Related Concept** (one sentence about a related idea to explore)
+
+${ragContext ? `Reference context: ${ragContext}` : ''}
+
+Keep the explanation clear, concise, and educational. Focus on WHY the correct answer is right.`;
+
+    const completion = await groq.chat.completions.create({
+      model: 'llama-3.1-8b-instant',
+      messages: [{ role: 'user', content: prompt }],
+      temperature: 0.5,
+      max_tokens: 500,
+    });
+
+    const explanation = completion.choices?.[0]?.message?.content?.trim() || 'No explanation available.';
+
+    return res.status(200).json({ explanation, isCorrect });
+  } catch (err) {
+    console.error('Quiz explanation error:', err);
+    return res.status(500).json({ error: 'Failed to generate explanation' });
+  }
+});
+
+router.post('/save', authMiddleware, async (req, res) => {
+  const { topic, score, questions } = req.body;
+
+  try {
+    const result = await QuizResult.create({
+      userId: req.user.id,
+      topic,
+      score,
+      total: 5,
+      questions,
+    });
+
+    return res.status(201).json({ message: 'Saved', id: result._id });
+  } catch (err) {
+    console.error('Quiz save error:', err);
+    return res.status(500).json({ error: 'Failed to save result' });
+  }
+});
+
 router.get('/history', authMiddleware, async (req, res) => {
   try {
     const results = await QuizResult.find({ userId: req.user.id })

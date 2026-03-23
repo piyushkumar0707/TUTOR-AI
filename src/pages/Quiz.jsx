@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import remarkBreaks from 'remark-breaks';
 import Sidebar from '../components/Sidebar';
 import { useAuth } from '../context/AuthContext';
 
@@ -97,12 +100,37 @@ function TopicInput({ onGenerate, loading, error }) {
 }
 
 /* ── Active Question Screen ── */
-function ActiveQuestion({ question, options, topic, current, total, onAnswer }) {
+function ActiveQuestion({ question, options, topic, current, total, onAnswer, token }) {
   const [selected, setSelected] = useState(null);
+  const [explanation, setExplanation] = useState(null);
+  const [loadingExplanation, setLoadingExplanation] = useState(false);
 
-  const handleSelect = (opt) => {
+  const handleSelect = async (opt) => {
     if (selected) return;
     setSelected(opt);
+    setLoadingExplanation(true);
+
+    // Fetch explanation
+    try {
+      const res = await fetch('/api/quiz/explain', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({
+          question: question.question,
+          userAnswer: opt,
+          correctAnswer: question.answer,
+          topic,
+        }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setExplanation(data.explanation);
+      }
+    } catch (err) {
+      console.error('Error fetching explanation:', err);
+    } finally {
+      setLoadingExplanation(false);
+    }
   };
 
   const getStyle = (opt) => {
@@ -171,6 +199,35 @@ function ActiveQuestion({ question, options, topic, current, total, onAnswer }) 
             );
           })}
         </div>
+
+        {/* Explanation Card */}
+        {selected && (
+          <div className="rounded-2xl p-8 mb-10 border border-outline-variant/10 bg-surface-container-high/50"
+               style={{ background: 'rgba(30,30,45,0.6)', backdropFilter: 'blur(20px)' }}>
+            {loadingExplanation ? (
+              <div className="flex items-center gap-3">
+                <div className="animate-spin material-symbols-outlined text-primary">progress_activity</div>
+                <span className="text-on-surface-variant">Loading explanation...</span>
+              </div>
+            ) : explanation ? (
+              <div className="text-on-surface-variant">
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm, remarkBreaks]}
+                  components={{
+                    p: ({ children }) => <p className="mb-3 last:mb-0 leading-relaxed text-on-surface">{children}</p>,
+                    h2: ({ children }) => <h3 className="font-bold text-primary text-lg mb-2 mt-4 first:mt-0">{children}</h3>,
+                    strong: ({ children }) => <strong className="text-primary font-semibold">{children}</strong>,
+                    ul: ({ children }) => <ul className="mb-3 pl-5 list-disc space-y-1">{children}</ul>,
+                    li: ({ children }) => <li className="leading-relaxed">{children}</li>,
+                    code: ({ children }) => <code className="text-primary bg-surface-container-highest/70 px-1 py-0.5 rounded">{children}</code>,
+                  }}
+                >
+                  {explanation}
+                </ReactMarkdown>
+              </div>
+            ) : null}
+          </div>
+        )}
 
         {/* Footer */}
         {selected && (
@@ -344,6 +401,7 @@ export default function Quiz() {
           current={current + 1}
           total={questions.length}
           onAnswer={handleAnswer}
+          token={token}
         />
       )}
       {phase === 'score' && (

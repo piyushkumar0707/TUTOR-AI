@@ -636,18 +636,18 @@ TUTOR-AI/
 
 ### 5.1 — 3D landing page (Three.js bonus)
 
-- [ ] Install packages:
+- [x] Install packages:
   ```bash
   npm install three @react-three/fiber @react-three/drei
   ```
-- [ ] Create `src/components/three/BrainMesh.jsx`:
+- [x] Create `src/components/three/BrainMesh.jsx`:
   - Uses `IcosahedronGeometry` + `MeshDistortMaterial` (purple)
   - Wireframe overlay for depth
   - `useFrame` for slow rotation
   - `Float` from drei for floating animation
   - Reference: full code in `06_3d_bonus_plan.md` → Step 2
 
-- [ ] Create `src/components/three/Scene.jsx`:
+- [x] Create `src/components/three/Scene.jsx`:
   - `<Canvas>` with `alpha: true` (transparent background)
   - Ambient light + point lights
   - `<Stars>` for particle background
@@ -655,7 +655,7 @@ TUTOR-AI/
   - Lazy-loaded with `React.lazy` + `<Suspense>`
   - Reference: full code in `06_3d_bonus_plan.md` → Step 4
 
-- [ ] Update `src/pages/Onboarding.jsx`:
+- [x] Update `src/pages/Onboarding.jsx`:
   - Replace static SVG orb with `<Scene />` component
   - Wrap in `<Suspense fallback={<spinner />}>`
   - Skip rendering on mobile: `window.innerWidth < 768`

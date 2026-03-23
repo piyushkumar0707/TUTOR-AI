@@ -1,4 +1,7 @@
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+const Scene = lazy(() => import('../components/three/Scene'));
 
 const FEATURES = [
   { icon: 'chat_bubble',   color: 'text-primary',   title: 'AI Chat Assistant', desc: 'Get instant answers to your study questions.' },
@@ -8,6 +11,13 @@ const FEATURES = [
 
 export default function Onboarding() {
   const navigate = useNavigate();
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
+
+  useEffect(() => {
+    const onResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
 
   return (
     <div className="bg-surface text-on-surface min-h-screen overflow-x-hidden font-['Plus_Jakarta_Sans']">
@@ -81,36 +91,21 @@ export default function Onboarding() {
                 <div className="absolute inset-0" style={{ filter: 'drop-shadow(0 0 60px rgba(189,157,255,0.4))' }}>
                   <div className="w-full h-full rounded-full bg-gradient-to-tr from-primary-dim/80 via-primary/40 to-tertiary/20 blur-xl animate-pulse" />
                 </div>
-                {/* SVG Brain illustration (replaces the Google-hosted image) */}
-                <svg className="relative z-10 w-full h-full opacity-90" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                  <defs>
-                    <radialGradient id="orbGrad" cx="50%" cy="40%" r="60%">
-                      <stop offset="0%" stopColor="#bd9dff" stopOpacity="0.9"/>
-                      <stop offset="60%" stopColor="#8a4cfc" stopOpacity="0.6"/>
-                      <stop offset="100%" stopColor="#ff97b2" stopOpacity="0.2"/>
-                    </radialGradient>
-                  </defs>
-                  <circle cx="100" cy="100" r="90" fill="url(#orbGrad)" opacity="0.3"/>
-                  <path d="M100,30 C60,30 35,55 35,90 C35,120 55,145 80,155 L100,175 L120,155 C145,145 165,120 165,90 C165,55 140,30 100,30 Z"
-                        fill="none" stroke="#bd9dff" strokeDasharray="4 2" strokeWidth="0.8"/>
-                  <path d="M70,60 Q100,40 130,60" fill="none" stroke="#bd9dff" strokeLinecap="round" strokeWidth="2"/>
-                  <path d="M60,90 Q100,70 140,90" fill="none" stroke="#a88cfb" strokeLinecap="round" strokeWidth="2"/>
-                  <path d="M70,120 Q100,100 130,120" fill="none" stroke="#bd9dff" strokeLinecap="round" strokeWidth="2"/>
-                  <path d="M100,60 V130" fill="none" stroke="#bd9dff" strokeLinecap="round" strokeWidth="1.5"/>
-                  {[{cx:70,cy:60},{cx:130,cy:60},{cx:70,cy:120},{cx:130,cy:120}].map((p,i)=>(
-                    <circle key={i} cx={p.cx} cy={p.cy} r="4" fill="#bd9dff"/>
-                  ))}
-                  {[{cx:60,cy:90},{cx:140,cy:90}].map((p,i)=>(
-                    <circle key={i} cx={p.cx} cy={p.cy} r="4" fill="#a88cfb"/>
-                  ))}
-                  <circle cx="100" cy="45" r="3" fill="#ff97b2"/>
-                  <circle cx="100" cy="140" r="3" fill="#ff97b2"/>
-                </svg>
-                {/* Floating particles */}
-                <div className="absolute top-1/4 -left-4 w-2 h-2 rounded-full bg-primary animate-bounce opacity-60"/>
-                <div className="absolute top-3/4 left-10 w-1.5 h-1.5 rounded-full bg-tertiary animate-pulse opacity-40"/>
-                <div className="absolute top-1/2 -right-8 w-2.5 h-2.5 rounded-full bg-secondary-fixed animate-ping opacity-30"/>
-                <div className="absolute bottom-1/4 right-1/4 w-1 h-1 rounded-full bg-white animate-pulse opacity-80"/>
+                {isMobile ? (
+                  <div className="relative z-10 w-full h-full rounded-full bg-gradient-to-tr from-primary/60 via-primary-dim/40 to-tertiary/20 blur-[1px]" />
+                ) : (
+                  <Suspense
+                    fallback={
+                      <div className="relative z-10 w-full h-full flex items-center justify-center">
+                        <div className="w-3/4 h-3/4 rounded-full border border-primary/40 border-t-primary animate-spin" />
+                      </div>
+                    }
+                  >
+                    <div className="relative z-10 w-full h-full">
+                      <Scene />
+                    </div>
+                  </Suspense>
+                )}
               </div>
             </div>
           </div>

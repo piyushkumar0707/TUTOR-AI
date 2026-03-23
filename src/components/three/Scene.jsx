@@ -1,33 +1,32 @@
-import { Canvas } from '@react-three/fiber';
-import { OrbitControls } from '@react-three/drei';
-import BrainMesh from './BrainMesh';
-import ParticleField from './ParticleField';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { EffectComposer, Bloom } from '@react-three/postprocessing';
+import NeuralMesh from './NeuralMesh';
+import DataFlow from './DataFlow';
+
+function CameraMotion() {
+  useFrame((state) => {
+    const t = state.clock.getElapsedTime();
+    state.camera.position.x = Math.sin(t * 0.15) * 0.2;
+    state.camera.position.y = Math.cos(t * 0.15) * 0.2;
+    state.camera.lookAt(0, 0, 0);
+  });
+  return null;
+}
 
 export default function Scene() {
   return (
-    <div className="w-full h-full">
-      <Canvas
-        shadows
-        dpr={[1, 1.5]}
-        camera={{ position: [0, 0, 5.1], fov: 48 }}
-        gl={{ alpha: true, antialias: true }}
-      >
-        <ambientLight intensity={0.38} color="#f5e7ff" />
-        <directionalLight position={[3, 4, 2]} intensity={1.1} color="#ffffff" castShadow />
-        <pointLight position={[-3, -2, 3]} intensity={1.35} color="#bd9dff" />
-        <pointLight position={[2.5, 1, -1.5]} intensity={0.9} color="#ff97b2" />
+    <Canvas camera={{ position: [0, 0, 7], fov: 55 }} dpr={[1, 1.5]}>
+      <ambientLight intensity={0.2} />
+      <pointLight position={[5, 5, 5]} intensity={1.5} color="#8a4cfc" />
 
-        <ParticleField />
-        <BrainMesh />
+      <NeuralMesh />
+      <DataFlow />
 
-        <OrbitControls
-          enableZoom={false}
-          autoRotate
-          autoRotateSpeed={0.5}
-          minPolarAngle={Math.PI / 2.8}
-          maxPolarAngle={Math.PI / 1.75}
-        />
-      </Canvas>
-    </div>
+      <CameraMotion />
+
+      <EffectComposer>
+        <Bloom intensity={1.2} luminanceThreshold={0.2} />
+      </EffectComposer>
+    </Canvas>
   );
 }

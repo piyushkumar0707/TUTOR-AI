@@ -28,3 +28,7 @@ server/.env
 *.sw?
 
 repomix-output.xml
+
+# Planning docs (keep local, exclude from recruiter-facing repo)
+*_plan.md
+TODO.md

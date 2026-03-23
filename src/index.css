@@ -41,3 +41,16 @@ body {
   to   { transform: rotate(360deg); }
 }
 .animate-spin { animation: spin 1s linear infinite; }
+
+
+
+// 
+body {
+  background: radial-gradient(circle at 30% 30%, #1a1028, #050509);
+  animation: bgShift 10s infinite alternate;
+}
+
+@keyframes bgShift {
+  0% { background-position: 30% 30%; }
+  100% { background-position: 70% 70%; }
+}

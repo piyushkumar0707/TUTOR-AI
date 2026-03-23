@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import { useAuth } from '../context/AuthContext';
 
@@ -263,16 +264,27 @@ function ScoreScreen({ score, total, topic, answers, onRetry, onNew }) {
 /* ── Main Quiz Page ── */
 export default function Quiz() {
   const { token } = useAuth();
-  const [phase,     setPhase]     = useState('input');
-  const [topic,     setTopic]     = useState('');
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const initialTopic = searchParams.get('topic') || '';
+  const sessionId = searchParams.get('sessionId') || '';
+
+  const [phase,     setPhase]     = useState(initialTopic ? 'quiz-loading' : 'input');
+  const [topic,     setTopic]     = useState(initialTopic);
   const [questions, setQuestions] = useState([]);
   const [current,   setCurrent]   = useState(0);
   const [score,     setScore]     = useState(0);
   const [answers,   setAnswers]   = useState([]);
-  const [loading,   setLoading]   = useState(false);
+  const [loading,   setLoading]   = useState(initialTopic ? true : false);
   const [error,     setError]     = useState('');
 
-  const generateQuiz = async (topicVal) => {
+  useEffect(() => {
+    if (initialTopic && phase === 'quiz-loading') {
+      generateQuiz(initialTopic, sessionId);
+    }
+  }, []);
+
+  const generateQuiz = async (topicVal, sid = '') => {
     setLoading(true);
     setError('');
     setTopic(topicVal);
@@ -280,7 +292,7 @@ export default function Quiz() {
       const res  = await fetch('/api/quiz/generate', {
         method:  'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body:    JSON.stringify({ topic: topicVal }),
+        body:    JSON.stringify({ topic: topicVal, sessionId: sid }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to generate quiz');

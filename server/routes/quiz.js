@@ -7,17 +7,33 @@ const authMiddleware = require('../middleware/authMiddleware');
 const router = express.Router();
 
 router.post('/generate', authMiddleware, async (req, res) => {
-  const { topic } = req.body;
+  const { topic, sessionId } = req.body;
 
   if (!topic || !topic.trim()) {
     return res.status(400).json({ error: 'Topic is required' });
   }
 
   try {
+    const ChatHistory = require('../models/ChatHistory');
+    let chatContext = '';
+
+    // Retrieve chat history if sessionId provided
+    if (sessionId) {
+      try {
+        const chat = await ChatHistory.findOne({ _id: sessionId, userId: req.user.id });
+        if (chat && chat.messages.length > 0) {
+          const relevantMessages = chat.messages.slice(-6).map(m => `${m.role}: ${m.content}`).join('\n');
+          chatContext = `\n\nUserChat History Context:\n${relevantMessages}`;
+        }
+      } catch (e) {
+        console.warn('Could not load chat context:', e.message);
+      }
+    }
+
     const ragContext = await retrieve(topic);
 
     const prompt = `You are a quiz generator. Generate exactly 5 multiple-choice questions about "${topic}".
-${ragContext ? `Use this context as reference:\n${ragContext}\n` : ''}
+${ragContext ? `Use this retrieved context as reference:\n${ragContext}\n` : ''}${chatContext}
 Return ONLY a valid JSON array. No markdown, no extra text, no backticks.
 Format:
 [
@@ -31,7 +47,8 @@ Rules:
 - Exactly 5 questions
 - Exactly 4 options per question labeled A), B), C), D)
 - The answer must be the full option text
-- Vary difficulty: 2 easy, 2 medium, 1 hard`;
+- Vary difficulty: 2 easy, 2 medium, 1 hard
+- If chat context is provided, base questions on that discussion`;
 
     const completion = await groq.chat.completions.create({
       model: 'llama-3.1-8b-instant',

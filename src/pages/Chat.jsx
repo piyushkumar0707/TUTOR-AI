@@ -1,4 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import ReactMarkdown from 'react-markdown';
+import remarkBreaks from 'remark-breaks';
+import remarkGfm from 'remark-gfm';
 import { useAuth } from '../context/AuthContext';
 import Sidebar from '../components/Sidebar';
 
@@ -48,8 +52,21 @@ function Message({ role, content, timestamp }) {
       </div>
       <div className="flex flex-col gap-3 max-w-[85%]">
         <div className="p-6 rounded-2xl rounded-tl-none border border-outline-variant/10 text-on-surface-variant leading-relaxed"
-             style={{ background: 'rgba(13,13,24,0.4)', backdropFilter: 'blur(20px)' }}
-             dangerouslySetInnerHTML={{ __html: content.replace(/\*\*(.*?)\*\*/g, '<strong class="text-primary">$1</strong>') }}/>
+             style={{ background: 'rgba(13,13,24,0.4)', backdropFilter: 'blur(20px)' }}>
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm, remarkBreaks]}
+            components={{
+              p: ({ children }) => <p className="mb-3 last:mb-0 leading-relaxed">{children}</p>,
+              ul: ({ children }) => <ul className="mb-3 pl-5 list-disc space-y-1">{children}</ul>,
+              ol: ({ children }) => <ol className="mb-3 pl-5 list-decimal space-y-1">{children}</ol>,
+              li: ({ children }) => <li className="leading-relaxed">{children}</li>,
+              strong: ({ children }) => <strong className="text-primary font-semibold">{children}</strong>,
+              code: ({ children }) => <code className="text-primary bg-surface-container-highest/70 px-1 py-0.5 rounded">{children}</code>,
+            }}
+          >
+            {content}
+          </ReactMarkdown>
+        </div>
         <span className="text-[0.6875rem] font-medium tracking-widest text-outline uppercase ml-1">
           TutorAI · {time}
         </span>
@@ -60,6 +77,7 @@ function Message({ role, content, timestamp }) {
 
 export default function Chat() {
   const { token } = useAuth();
+  const navigate = useNavigate();
   const [messages,  setMessages]  = useState([{
     role: 'assistant', content: "Hello! I'm ready to help you learn. What topic would you like to explore today?", timestamp: new Date()
   }]);
@@ -69,6 +87,12 @@ export default function Chat() {
   const [sessionId, setSessionId] = useState(null);
   const bottomRef = useRef(null);
   const textareaRef = useRef(null);
+
+  const generateQuizFromChat = () => {
+    if (sessionId) {
+      navigate(`/quiz?topic=${encodeURIComponent(topic)}&sessionId=${sessionId}`);
+    }
+  };
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -120,6 +144,13 @@ export default function Chat() {
             </select>
           </div>
           <div className="flex items-center gap-4">
+            <button
+              onClick={generateQuizFromChat}
+              disabled={!sessionId}
+              className="px-4 py-1.5 text-xs font-semibold text-on-primary bg-gradient-to-r from-[#bd9dff] to-[#8a4cfc] rounded-lg hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              Quiz on {topic}
+            </button>
             <button className="px-4 py-1.5 text-xs font-semibold text-secondary border border-outline-variant/30 rounded-lg hover:bg-surface-container-high transition-colors">
               Focus Mode
             </button>

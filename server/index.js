@@ -1,11 +1,17 @@
 require('dotenv').config({ path: require('path').resolve(__dirname, '.env') });
+const { randomUUID } = require('crypto');
 const express   = require('express');
 const mongoose  = require('mongoose');
 const cors      = require('cors');
 const cookieParser = require('cookie-parser');
 const rateLimit = require('express-rate-limit');
+const morgan = require('morgan');
+const logger = require('./services/logger');
+const { metricsMiddleware, getMetricsSnapshot } = require('./middleware/metrics');
 
 const app = express();
+
+app.disable('x-powered-by');
 
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -19,8 +25,54 @@ app.use(cors({
   origin: process.env.CLIENT_URL || 'http://localhost:5173',
   credentials: true,
 }));
+
+app.use((req, res, next) => {
+  req.id = req.headers['x-request-id'] || randomUUID();
+  res.setHeader('x-request-id', req.id);
+  next();
+});
+
+morgan.token('request-id', (req) => req.id || '-');
+
+app.use(morgan(':method :url :status :response-time ms - reqId=:request-id', {
+  skip: (req) => req.url === '/health',
+  stream: {
+    write: (message) => logger.info(message.trim()),
+  },
+}));
+
 app.use(cookieParser());
 app.use(express.json());
+app.use(metricsMiddleware);
+
+app.get('/health', (req, res) => {
+  return res.status(200).json({
+    status: 'ok',
+    timestamp: new Date().toISOString(),
+    uptimeSeconds: Math.floor(process.uptime()),
+  });
+});
+
+app.get('/ready', (req, res) => {
+  const dbReady = mongoose.connection.readyState === 1;
+  if (!dbReady) {
+    return res.status(503).json({
+      status: 'not_ready',
+      database: 'disconnected',
+      timestamp: new Date().toISOString(),
+    });
+  }
+
+  return res.status(200).json({
+    status: 'ready',
+    database: 'connected',
+    timestamp: new Date().toISOString(),
+  });
+});
+
+app.get('/metrics', (req, res) => {
+  return res.status(200).json(getMetricsSnapshot());
+});
 
 // Routes
 app.use('/api/auth', authLimiter, require('./routes/auth'));
@@ -33,7 +85,7 @@ app.use((req, res) => {
 });
 
 app.use((err, req, res, next) => {
-  console.error('Unhandled server error:', err);
+  logger.error('Unhandled server error', { requestId: req.id, error: err.message, stack: err.stack });
   if (res.headersSent) return next(err);
   return res.status(500).json({ error: 'Server error' });
 });
@@ -41,12 +93,21 @@ app.use((err, req, res, next) => {
 // MongoDB connection + server start
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
-    console.info('MongoDB connected');
+    logger.info('MongoDB connected');
     app.listen(process.env.PORT || 5000, () => {
-      console.info(`Server running on port ${process.env.PORT || 5000}`);
+      logger.info(`Server running on port ${process.env.PORT || 5000}`);
     });
   })
   .catch(err => {
-    console.error('MongoDB connection error:', err);
+    logger.error('MongoDB connection error', { error: err.message, stack: err.stack });
     process.exit(1);
   });
+
+process.on('unhandledRejection', (reason) => {
+  logger.error('Unhandled promise rejection', { reason: String(reason) });
+});
+
+process.on('uncaughtException', (err) => {
+  logger.fatal('Uncaught exception', { error: err.message, stack: err.stack });
+  process.exit(1);
+});

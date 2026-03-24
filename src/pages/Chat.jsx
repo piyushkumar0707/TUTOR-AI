@@ -11,6 +11,8 @@ const INITIAL_ASSISTANT_MESSAGE = "Hello! I'm ready to help you learn. What topi
 const CHAT_MESSAGES_KEY = 'tutor_chat_messages';
 const CHAT_SESSION_KEY = 'tutor_chat_session';
 const CHAT_TOPIC_KEY = 'tutor_chat_topic';
+const STREAM_IDLE_TIMEOUT_MS = 12000;
+const STREAM_TOTAL_TIMEOUT_MS = 45000;
 
 function getSavedMessages() {
   try {
@@ -114,9 +116,19 @@ export default function Chat() {
   const [topic,     setTopic]     = useState(() => localStorage.getItem(CHAT_TOPIC_KEY) || 'Mathematics');
   const [lastSubtopic, setLastSubtopic] = useState('');
   const [sessionId, setSessionId] = useState(() => localStorage.getItem(CHAT_SESSION_KEY) || null);
+  const [isStreaming, setIsStreaming] = useState(false);
   const bottomRef = useRef(null);
   const textareaRef = useRef(null);
+  const streamRef = useRef(null);
   const quizTopic = 'Current Chat';
+
+  const closeStream = () => {
+    if (streamRef.current) {
+      streamRef.current.close();
+      streamRef.current = null;
+    }
+    setIsStreaming(false);
+  };
 
   const generateQuizFromChat = () => {
     if (sessionId) {
@@ -184,26 +196,156 @@ export default function Chat() {
       .finally(() => setLoading(false));
   }, [location.search, token]);
 
+  useEffect(() => () => closeStream(), []);
+
+  const sendMessageFallback = async (userMsg) => {
+    const res = await fetch('/api/chat', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ message: userMsg.content, topic, sessionId }),
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Chat failed');
+
+    if (data.sessionId) setSessionId(data.sessionId);
+    setLastSubtopic(extractSubtopic(data.response));
+    setMessages(prev => [...prev, { role: 'assistant', content: data.response, timestamp: new Date() }]);
+  };
+
+  const sendMessageStreaming = async (userMsg) => {
+    const initRes = await fetch('/api/chat/stream-init', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ message: userMsg.content, topic, sessionId }),
+    });
+
+    const initData = await initRes.json();
+    if (!initRes.ok || !initData.streamId) {
+      throw new Error(initData.error || 'Failed to start stream');
+    }
+
+    const assistantId = `assistant-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+    const assistantPlaceholder = {
+      id: assistantId,
+      role: 'assistant',
+      content: '',
+      timestamp: new Date(),
+      streaming: true,
+    };
+
+    setMessages(prev => [...prev, assistantPlaceholder]);
+
+    await new Promise((resolve, reject) => {
+      let fullText = '';
+      let idleTimer = null;
+      let totalTimer = null;
+
+      const clearTimers = () => {
+        if (idleTimer) clearTimeout(idleTimer);
+        if (totalTimer) clearTimeout(totalTimer);
+      };
+
+      const bumpIdleTimer = () => {
+        if (idleTimer) clearTimeout(idleTimer);
+        idleTimer = setTimeout(() => {
+          reject(new Error('Stream timed out while waiting for next chunk'));
+        }, STREAM_IDLE_TIMEOUT_MS);
+      };
+
+      const es = new EventSource(`/api/chat/stream/${initData.streamId}`, { withCredentials: true });
+      streamRef.current = es;
+      setIsStreaming(true);
+      bumpIdleTimer();
+      totalTimer = setTimeout(() => {
+        reject(new Error('Stream exceeded maximum duration'));
+      }, STREAM_TOTAL_TIMEOUT_MS);
+
+      es.onopen = () => {
+        bumpIdleTimer();
+      };
+
+      es.addEventListener('chunk', (event) => {
+        try {
+          const payload = JSON.parse(event.data);
+          const piece = payload?.content || '';
+          if (!piece) return;
+
+          fullText += piece;
+          bumpIdleTimer();
+          setMessages(prev => prev.map((msg) => (
+            msg.id === assistantId ? { ...msg, content: msg.content + piece } : msg
+          )));
+        } catch {
+          // Ignore malformed chunk payloads.
+        }
+      });
+
+      es.addEventListener('done', (event) => {
+        try {
+          const payload = JSON.parse(event.data || '{}');
+          if (payload.sessionId) setSessionId(payload.sessionId);
+          setLastSubtopic(extractSubtopic(fullText));
+          setMessages(prev => prev.map((msg) => (
+            msg.id === assistantId
+              ? { ...msg, content: msg.content || fullText || 'I could not generate a response.', streaming: false }
+              : msg
+          )));
+        } finally {
+          clearTimers();
+          es.close();
+          streamRef.current = null;
+          setIsStreaming(false);
+          resolve();
+        }
+      });
+
+      es.addEventListener('error', (event) => {
+        try {
+          let errMsg = 'Stream failed';
+          if (event?.data) {
+            const payload = JSON.parse(event.data);
+            errMsg = payload.error || errMsg;
+          }
+          reject(new Error(errMsg));
+        } catch {
+          reject(new Error('Stream failed'));
+        } finally {
+          clearTimers();
+          es.close();
+          streamRef.current = null;
+          setIsStreaming(false);
+          setMessages(prev => prev.filter((msg) => msg.id !== assistantId));
+        }
+      });
+    });
+  };
+
   const sendMessage = async () => {
     if (!input.trim() || loading) return;
+
+    closeStream();
+
     const userMsg = { role: 'user', content: input.trim(), timestamp: new Date() };
     setMessages(prev => [...prev, userMsg]);
     setInput('');
     setLoading(true);
 
     try {
-      const res  = await fetch('/api/chat', {
-        method:  'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body:    JSON.stringify({ message: userMsg.content, topic, sessionId }),
-      });
-      const data = await res.json();
-      if (data.sessionId) setSessionId(data.sessionId);
-      setLastSubtopic(extractSubtopic(data.response));
-      setMessages(prev => [...prev, { role: 'assistant', content: data.response, timestamp: new Date() }]);
+      await sendMessageStreaming(userMsg);
     } catch {
-      setMessages(prev => [...prev, { role: 'assistant', content: 'Sorry, something went wrong. Please try again.', timestamp: new Date() }]);
+      setIsStreaming(false);
+      try {
+        await sendMessageFallback(userMsg);
+      } catch {
+        setMessages(prev => [...prev, {
+          role: 'assistant',
+          content: 'Sorry, something went wrong. Please try again.',
+          timestamp: new Date(),
+        }]);
+      }
     } finally {
       setLoading(false);
     }
@@ -246,6 +388,12 @@ export default function Chat() {
             </select>
           </div>
           <div className="flex items-center gap-4">
+            {isStreaming && (
+              <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-primary">
+                <span className="h-2 w-2 animate-pulse rounded-full bg-primary" />
+                Streaming
+              </span>
+            )}
             <button
               onClick={generateQuizFromChat}
               disabled={!sessionId}
@@ -262,9 +410,11 @@ export default function Chat() {
               Focus Mode
             </button>
             <button onClick={() => {
+              closeStream();
               setMessages([{ role: 'assistant', content: INITIAL_ASSISTANT_MESSAGE, timestamp: new Date() }]);
               setSessionId(null);
               setLastSubtopic('');
+              setLoading(false);
               localStorage.removeItem(CHAT_MESSAGES_KEY);
               localStorage.removeItem(CHAT_SESSION_KEY);
             }}
@@ -297,9 +447,17 @@ export default function Chat() {
                 className="w-full bg-transparent border-none focus:ring-0 text-on-surface placeholder:text-outline resize-none outline-none"
               />
               <div className="flex justify-between items-center mt-2">
-                <span className="text-[0.6875rem] text-on-surface-variant tracking-wide px-1 uppercase font-semibold">
-                  Enter to send · Shift+Enter for new line
-                </span>
+                <div className="flex items-center gap-3">
+                  <span className="text-[0.6875rem] text-on-surface-variant tracking-wide px-1 uppercase font-semibold">
+                    Enter to send · Shift+Enter for new line
+                  </span>
+                  {isStreaming && (
+                    <span className="inline-flex items-center gap-1 text-[0.625rem] font-bold uppercase tracking-widest text-primary/85">
+                      <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-primary" />
+                      Real-time
+                    </span>
+                  )}
+                </div>
                 <div className="flex gap-2">
                   <button
                     type="button"

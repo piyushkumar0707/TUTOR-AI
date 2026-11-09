@@ -94,7 +94,7 @@ Rules:
 - For Problem Set: keep question text SHORT — problems not essays`;
 
     const completion = await groq.chat.completions.create({
-      model:       'llama-3.3-70b-versatile',
+      model:       'openai/gpt-oss-120b',
       messages:    [{ role: 'user', content: prompt }],
       temperature: 0.5,
       max_tokens:  2000,

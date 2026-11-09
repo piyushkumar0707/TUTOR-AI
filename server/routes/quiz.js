@@ -56,7 +56,7 @@ Rules:
 - If chat context conflicts with selected topic "${topic}", follow the chat context.`;
 
     const completion = await groq.chat.completions.create({
-      model: 'llama-3.1-8b-instant',
+      model: 'openai/gpt-oss-20b',
       messages: [{ role: 'user', content: prompt }],
       temperature: 0.5,
       max_tokens: 1500,
@@ -146,7 +146,7 @@ ${isCorrect ? `Your answer of "${userAnswer}" is correct! Here's why:` : `The co
 ${ragContext ? `\n\nReference context: ${ragContext}` : ''}`;
 
     const completion = await groq.chat.completions.create({
-      model: 'llama-3.1-8b-instant',
+      model: 'openai/gpt-oss-20b',
       messages: [{ role: 'user', content: prompt }],
       temperature: 0.4,
       max_tokens: 500,

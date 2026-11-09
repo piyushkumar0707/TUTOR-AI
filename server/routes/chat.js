@@ -107,7 +107,7 @@ async function prepareChatContext({ userId, message, topic, sessionId }) {
 
 function getCompletionPayload({ topic, followUpDifficulty, ragContext, conversationMessages, message, stream }) {
   return {
-    model: 'llama-3.1-8b-instant',
+    model: 'openai/gpt-oss-20b',
     messages: [
       {
         role: 'system',
